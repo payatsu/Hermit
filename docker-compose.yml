@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  petalinux:
+    image: petalinux
+    build:
+      context: .
+      args:
+        - USER
+        - http_proxy
+        - https_proxy
+    environment:
+      - TERM
+      - http_proxy
+      - https_proxy
+
+# vim: set expandtab shiftwidth=0 tabstop=2 :
