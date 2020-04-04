@@ -17,6 +17,7 @@ apt-get install -y --no-install-recommends tzdata locales && \
 apt-get install -y --no-install-recommends \
 autoconf \
 automake \
+bc \
 bison \
 build-essential \
 chrpath \
