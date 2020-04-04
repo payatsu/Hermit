@@ -1,10 +1,9 @@
-ARG USER=developer
 ARG install_dir=/opt/petalinux
-ARG installer=petalinux-v2019.2-final-installer.run
 ARG baseimage=ubuntu:18.04
 
 FROM ${baseimage} AS petalinux-base
-ARG USER
+ARG USER=developer
+ENV USER=${USER}
 ARG install_dir
 
 RUN \
@@ -70,9 +69,8 @@ chown -Rv ${USER}:${USER} ${install_dir}
 USER ${USER}
 
 FROM petalinux-base AS petalinux-builder
-ARG USER
 ARG install_dir
-ARG installer
+ARG installer=petalinux-v2019.2-final-installer.run
 
 COPY --chown=${USER}:${USER} ${installer} /tmp
 RUN \
@@ -80,9 +78,8 @@ chmod a+x /tmp/${installer} && \
 (cd /tmp; yes | ./${installer} ${install_dir})
 
 FROM petalinux-base
-ARG USER
 ARG install_dir
 
 COPY --from=petalinux-builder ${install_dir} ${install_dir}
 WORKDIR /home/${USER}
-ENV LANG=ja_JP.utf8 SHELL=/bin/bash USER=${USER}
+ENV LANG=ja_JP.utf8 SHELL=/bin/bash
