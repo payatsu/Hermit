@@ -76,7 +76,8 @@ ARG installer=petalinux-v2019.2-final-installer.run
 COPY --chown=${USER}:${USER} ${installer} /tmp
 RUN \
 chmod a+x /tmp/${installer} && \
-(cd /tmp; yes | ./${installer} ${install_dir})
+(cd /tmp; yes | ./${installer} ${install_dir}) && \
+find ${install_dir} -type d -name sstate-cache -exec sh -c 'echo cleaning {}; rm -fr {}; mkdir {}' \;
 
 FROM petalinux-base
 ARG install_dir
