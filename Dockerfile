@@ -1,7 +1,7 @@
 ARG install_dir=/opt/petalinux
 ARG baseimage=ubuntu:18.04
 
-FROM ${baseimage} AS petalinux-base
+FROM ${baseimage} AS petalinux-yorishiro
 ARG USER=developer
 ENV USER=${USER}
 ARG install_dir
@@ -69,19 +69,25 @@ mkdir -pv ${install_dir} && \
 chown -Rv ${USER}:${USER} ${install_dir}
 USER ${USER}
 
-FROM petalinux-base AS petalinux-builder
+FROM petalinux-yorishiro AS petalinux-sacrifice
 ARG install_dir
 ARG installer=petalinux-v2019.2-final-installer.run
 
 COPY --chown=${USER}:${USER} ${installer} /tmp
 RUN \
 chmod a+x /tmp/${installer} && \
-(cd /tmp; yes | ./${installer} ${install_dir}) && \
-find ${install_dir} -type d -name sstate-cache -exec sh -c 'echo cleaning {}; rm -fr {}; mkdir {}' \;
+(cd /tmp; yes | ./${installer} ${install_dir})
 
-FROM petalinux-base
+FROM petalinux-sacrifice AS petalinux-zombie
 ARG install_dir
 
-COPY --from=petalinux-builder ${install_dir} ${install_dir}
+RUN \
+find ${install_dir}/components/yocto/source -type d -name '*microblaze*' -prune -exec sh -c 'echo removing {}; rm -fr {}' \; && \
+find ${install_dir} -type d -name sstate-cache -exec sh -c 'echo cleaning {}; rm -fr {}; mkdir {}' \;
+
+FROM petalinux-yorishiro AS petalinux-slim
+ARG install_dir
+
+COPY --from=petalinux-zombie ${install_dir} ${install_dir}
 WORKDIR /home/${USER}
 ENV LANG=ja_JP.utf8 SHELL=/bin/bash
