@@ -83,7 +83,7 @@ ARG install_dir
 
 RUN \
 find ${install_dir}/components/yocto/source -type d -name '*microblaze*' -prune -exec sh -c 'echo removing {}; rm -fr {}' \; && \
-find ${install_dir} -type d -name sstate-cache -exec sh -c 'echo cleaning {}; rm -fr {}; mkdir {}' \;
+rm -fvr ${install_dir}/components/yocto/downloads
 
 FROM petalinux-yorishiro AS petalinux-slim
 ARG install_dir
