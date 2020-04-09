@@ -5,13 +5,26 @@ services:
     image: petalinux
     build:
       context: .
+      target: petalinux-slim
       args:
         - USER
         - http_proxy
         - https_proxy
+      network: nw
     environment:
       - TERM
       - http_proxy
       - https_proxy
+
+  repository:
+    image: nginx
+    volumes:
+      - ".:/usr/share/nginx/html:ro"
+    networks:
+      - nw
+
+networks:
+  nw:
+    name: nw
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :

@@ -73,10 +73,11 @@ FROM petalinux-yorishiro AS petalinux-sacrifice
 ARG install_dir
 ARG installer=petalinux-v2019.2-final-installer.run
 
-COPY --chown=${USER}:${USER} ${installer} /tmp
 RUN \
+wget -P /tmp http://repository/${installer} && \
 chmod a+x /tmp/${installer} && \
-(cd /tmp; yes | ./${installer} ${install_dir})
+(cd /tmp; yes | ./${installer} ${install_dir}) && \
+rm -fv /tmp/${installer}
 
 FROM petalinux-sacrifice AS petalinux-zombie
 ARG install_dir
