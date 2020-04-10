@@ -6,6 +6,7 @@ x-build:
   network: nw
   args:
     - USER
+    - PETALINUX_VER
     - http_proxy
     - https_proxy
 

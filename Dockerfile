@@ -71,9 +71,10 @@ USER ${USER}
 
 FROM petalinux-yorishiro AS petalinux-original
 ARG install_dir
+ARG PETALINUX_VER=2019.2
 
 RUN \
-installer=petalinux-v${PETALINUX_VER:-2019.2}-final-installer.run; \
+installer=petalinux-v${PETALINUX_VER}-final-installer.run; \
 wget --progress=dot:giga -P /tmp http://repository/${installer} && \
 chmod a+x /tmp/${installer} && \
 (cd /tmp; yes | ./${installer} ${install_dir}) && \
