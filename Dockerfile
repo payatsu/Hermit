@@ -69,7 +69,7 @@ mkdir -pv ${install_dir} && \
 chown -Rv ${USER}:${USER} ${install_dir}
 USER ${USER}
 
-FROM petalinux-yorishiro AS petalinux-sacrifice
+FROM petalinux-yorishiro AS petalinux-original
 ARG install_dir
 
 RUN \
@@ -79,7 +79,7 @@ chmod a+x /tmp/${installer} && \
 (cd /tmp; yes | ./${installer} ${install_dir}) && \
 rm -fv /tmp/${installer}
 
-FROM petalinux-sacrifice AS petalinux-zombie
+FROM petalinux-original AS petalinux-sacrifice
 ARG install_dir
 
 RUN \
@@ -89,6 +89,6 @@ rm -fvr ${install_dir}/components/yocto/downloads
 FROM petalinux-yorishiro AS petalinux-slim
 ARG install_dir
 
-COPY --from=petalinux-zombie ${install_dir} ${install_dir}
+COPY --from=petalinux-sacrifice ${install_dir} ${install_dir}
 WORKDIR /home/${USER}
 ENV LANG=ja_JP.utf8 SHELL=/bin/bash
