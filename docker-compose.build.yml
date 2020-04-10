@@ -1,0 +1,35 @@
+version: "3.7"
+
+x-build:
+  &build-config
+  context: .
+  network: nw
+  args:
+    - USER
+    - http_proxy
+    - https_proxy
+
+services:
+  petalinux:
+    build:
+      <<: *build-config
+      target: petalinux-slim
+
+  original:
+    image: petalinux:${PETALINUX_VER}-original
+    build:
+      <<: *build-config
+      target: petalinux-original
+
+  repository:
+    image: nginx:alpine
+    volumes:
+      - ".:/usr/share/nginx/html:ro"
+    networks:
+      - nw
+
+networks:
+  nw:
+    name: nw
+
+# vim: set expandtab shiftwidth=0 tabstop=2 :

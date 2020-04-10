@@ -3,9 +3,9 @@
 # How to Build
 
 ```sh
-$ docker-compose up -d repository
-$ docker-compose build
-$ docker-compose down
+$ docker-compose -f docker-compose.build.yml up -d repository
+$ docker-compose -f docker-compose.yml -f docker-compose.build.yml build
+$ docker-compose -f docker-compose.build.yml down
 ```
 
 # How to Start a Container
