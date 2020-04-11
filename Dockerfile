@@ -1,9 +1,9 @@
+ARG USER=developer
 ARG install_dir=/opt/petalinux
 ARG baseimage=ubuntu:18.04
 
 FROM ${baseimage} AS petalinux-yorishiro
-ARG USER=developer
-ENV USER=${USER}
+ARG USER
 ARG install_dir
 
 RUN \
@@ -60,19 +60,20 @@ apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/* && 
 sed -i -e 's/^# \(en_US\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
 sed -i -e 's/^# \(ja_JP\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
 locale-gen && \
-echo "[ -f ${install_dir}/settings.sh ] && . ${install_dir}/settings.sh" >> /etc/bash.bashrc && \
 groupadd ${USER} && \
 useradd -g ${USER} -m -s /bin/bash ${USER} && \
 echo root:root | chpasswd && \
 echo ${USER}:${USER} | chpasswd && \
 mkdir -pv ${install_dir} && \
-chown -Rv ${USER}:${USER} ${install_dir}
-USER ${USER}
+chown -Rv ${USER}:${USER} ${install_dir} && \
+echo . ${install_dir}/settings.sh >> /etc/profile
 
 FROM petalinux-yorishiro AS petalinux-original
+ARG USER
 ARG install_dir
 ARG PETALINUX_VER=2019.2
 
+USER ${USER}
 RUN \
 installer=petalinux-v${PETALINUX_VER}-final-installer.run; \
 wget --progress=dot:giga -P /tmp http://repository/${installer} && \
@@ -91,5 +92,7 @@ FROM petalinux-yorishiro AS petalinux-slim
 ARG install_dir
 
 COPY --from=petalinux-sacrifice ${install_dir} ${install_dir}
-WORKDIR /home/${USER}
 ENV LANG=ja_JP.utf8 SHELL=/bin/bash
+COPY entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["bash"]

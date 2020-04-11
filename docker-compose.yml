@@ -4,6 +4,7 @@ services:
   petalinux:
     image: petalinux:${PETALINUX_VER}-slim
     environment:
+      - USER
       - TERM
       - http_proxy
       - https_proxy
