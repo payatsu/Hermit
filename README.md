@@ -26,3 +26,6 @@ $ docker-compose -f docker-compose.ext.yml down
 ```sh
 $ docker-compose run --rm petalinux
 ```
+
+## Future Work
+- shrink container image size
