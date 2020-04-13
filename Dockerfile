@@ -50,6 +50,7 @@ u-boot-tools \
 update-inetd \
 unzip \
 wget \
+x11-utils \
 xterm \
 xvfb \
 xxd \
