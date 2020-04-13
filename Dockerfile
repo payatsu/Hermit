@@ -40,6 +40,7 @@ lsb-release \
 net-tools \
 pax \
 python \
+rlwrap \
 rsync \
 screen \
 socat \
@@ -87,7 +88,8 @@ ARG install_dir
 
 RUN \
 find ${install_dir}/components/yocto/source -type d -name '*microblaze*' -prune -exec sh -c 'echo removing {}; rm -fr {}' \; && \
-rm -fvr ${install_dir}/components/yocto/downloads
+rm -fvr ${install_dir}/components/yocto/downloads && \
+find ${install_dir} -type f -name rlwrap -exec sh -c 'rm -v {}; ln -sv /usr/bin/rlwrap {}' \;
 
 FROM petalinux-yorishiro AS petalinux-slim
 ARG install_dir
