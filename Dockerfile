@@ -96,6 +96,6 @@ ARG install_dir
 
 COPY --from=petalinux-sacrifice ${install_dir} ${install_dir}
 ENV LANG=ja_JP.utf8 SHELL=/bin/bash
-COPY entrypoint.sh /usr/local/bin/
+COPY scripts/entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["bash"]
