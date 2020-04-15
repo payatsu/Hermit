@@ -62,6 +62,7 @@ apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/* && 
 sed -i -e 's/^# \(en_US\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
 sed -i -e 's/^# \(ja_JP\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
 locale-gen && \
+sed -i -e '/PS1=/s/\\h/\\H/' /root/.bashrc /etc/skel/.bashrc && \
 groupadd ${USER} && \
 useradd -g ${USER} -m -s /bin/bash ${USER} && \
 echo root:root | chpasswd && \
