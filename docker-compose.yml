@@ -9,5 +9,8 @@ services:
       - DISPLAY
       - http_proxy
       - https_proxy
+    working_dir: "/home/${USER}/workspace/${PETALINUX_VER}"
+    volumes:
+      - "./workspace/${PETALINUX_VER}:/home/${USER}/workspace/${PETALINUX_VER}"
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :
