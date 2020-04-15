@@ -1,16 +1,26 @@
 version: "3.7"
 
+x-petaconfig:
+  &petalinux-config
+  environment:
+    - USER
+    - TERM
+    - DISPLAY
+    - http_proxy
+    - https_proxy
+  working_dir: "/home/${USER}/workspace/${PETALINUX_VER}"
+  volumes:
+    - "./workspace/${PETALINUX_VER}:/home/${USER}/workspace/${PETALINUX_VER}"
+
 services:
   petalinux:
+    <<: *petalinux-config
     image: petalinux:${PETALINUX_VER}-slim
-    environment:
-      - USER
-      - TERM
-      - DISPLAY
-      - http_proxy
-      - https_proxy
-    working_dir: "/home/${USER}/workspace/${PETALINUX_VER}"
-    volumes:
-      - "./workspace/${PETALINUX_VER}:/home/${USER}/workspace/${PETALINUX_VER}"
+    hostname: petalinux-${PETALINUX_VER}-slim
+
+  original:
+    <<: *petalinux-config
+    image: petalinux:${PETALINUX_VER}-original
+    hostname: petalinux-${PETALINUX_VER}-original
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :

@@ -17,7 +17,6 @@ services:
       target: petalinux-slim
 
   original:
-    image: petalinux:${PETALINUX_VER}-original
     build:
       <<: *build-config
       target: petalinux-original
