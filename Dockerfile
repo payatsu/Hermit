@@ -54,7 +54,6 @@ wget \
 x11-utils \
 xterm \
 xvfb \
-xxd \
 zlib1g-dev \
 zlib1g:i386 \
 && \
