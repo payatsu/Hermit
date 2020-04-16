@@ -48,8 +48,8 @@ texinfo \
 tftpd \
 tofrodos \
 u-boot-tools \
-update-inetd \
 unzip \
+update-inetd \
 wget \
 x11-utils \
 xterm \
