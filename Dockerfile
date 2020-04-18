@@ -1,5 +1,5 @@
 ARG USER=developer
-ARG install_dir=/opt/petalinux
+ARG install_dir=/opt/PetaLinux
 ARG baseimage=ubuntu:18.04
 
 FROM ${baseimage} AS petalinux-yorishiro
