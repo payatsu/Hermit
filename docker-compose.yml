@@ -5,7 +5,6 @@ x-petaconfig:
   environment:
     - USER
     - TERM
-    - DISPLAY
     - http_proxy
     - https_proxy
   working_dir: "/home/${USER}/workspace/${PETALINUX_VER}"
