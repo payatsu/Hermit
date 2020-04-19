@@ -1,25 +1,31 @@
 version: "3.7"
 
-x-build:
-  &build-config
+x-build-common:
+  &build-common
   context: .
   network: nw
   args:
     - USER
-    - PETALINUX_VER
     - baseimage
     - http_proxy
     - https_proxy
 
+x-build-petalinux:
+  &build-petalinux
+  <<: *build-common
+  dockerfile: Dockerfile.petalinux
+  args:
+    - PETALINUX_VER
+
 services:
   petalinux:
     build:
-      <<: *build-config
+      <<: *build-petalinux
       target: petalinux-slim
 
   petalinux-original:
     build:
-      <<: *build-config
+      <<: *build-petalinux
       target: petalinux-original
 
   repository:

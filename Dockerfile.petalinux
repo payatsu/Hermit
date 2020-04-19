@@ -99,3 +99,5 @@ ENV LANG=ja_JP.utf8 SHELL=/bin/bash
 COPY scripts/entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["bash"]
+
+# vim: set filetype=dockerfile :
