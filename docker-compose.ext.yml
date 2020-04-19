@@ -1,21 +1,25 @@
 version: "3.7"
 
+x-args:
+  &args
+  USER:
+  baseimage:
+  http_proxy:
+  https_proxy:
+
 x-build-common:
   &build-common
   context: .
   network: nw
-  args:
-    - USER
-    - baseimage
-    - http_proxy
-    - https_proxy
 
 x-build-petalinux:
   &build-petalinux
   <<: *build-common
   dockerfile: Dockerfile.petalinux
   args:
-    - PETALINUX_VER
+    <<: *args
+    PETALINUX_VER:
+
 
 services:
   petalinux:
