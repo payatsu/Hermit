@@ -17,7 +17,7 @@ services:
     image: petalinux:${PETALINUX_VER}-slim
     hostname: petalinux-${PETALINUX_VER}-slim
 
-  original:
+  petalinux-original:
     <<: *petalinux-config
     image: petalinux:${PETALINUX_VER}-original
     hostname: petalinux-${PETALINUX_VER}-original

@@ -17,7 +17,7 @@ services:
       <<: *build-config
       target: petalinux-slim
 
-  original:
+  petalinux-original:
     build:
       <<: *build-config
       target: petalinux-original
