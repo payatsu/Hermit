@@ -1,24 +1,28 @@
 version: "3.7"
 
-x-petaconfig:
-  &petalinux-config
+x-config-common:
+  &config-common
   environment:
     - USER
     - TERM
     - http_proxy
     - https_proxy
+
+x-config-petalinux:
+  &config-petalinux
+  <<: *config-common
   working_dir: "/home/${USER}/workspace/${PETALINUX_VER}"
   volumes:
     - "./workspace/${PETALINUX_VER}:/home/${USER}/workspace/${PETALINUX_VER}"
 
 services:
   petalinux:
-    <<: *petalinux-config
+    <<: *config-petalinux
     image: petalinux:${PETALINUX_VER}-slim
     hostname: petalinux-${PETALINUX_VER}-slim
 
   petalinux-original:
-    <<: *petalinux-config
+    <<: *config-petalinux
     image: petalinux:${PETALINUX_VER}-original
     hostname: petalinux-${PETALINUX_VER}-original
 
