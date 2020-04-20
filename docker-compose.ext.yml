@@ -20,6 +20,13 @@ x-build-petalinux:
     <<: *args
     PETALINUX_VER:
 
+x-build-vivado:
+  &build-vivado
+  <<: *build-common
+  dockerfile: Dockerfile.vivado
+  args:
+    <<: *args
+    VIVADO_VER:
 
 services:
   petalinux:
@@ -31,6 +38,16 @@ services:
     build:
       <<: *build-petalinux
       target: petalinux-original
+
+  vivado:
+    build:
+      <<: *build-vivado
+      target: vivado-slim
+
+  vivado-original:
+    build:
+      <<: *build-vivado
+      target: vivado-original
 
   repository:
     image: nginx:alpine

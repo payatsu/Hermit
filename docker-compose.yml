@@ -1,19 +1,29 @@
 version: "3.7"
 
-x-config-common:
-  &config-common
-  environment:
-    - USER
-    - TERM
-    - http_proxy
-    - https_proxy
+x-environment:
+  &environment
+  USER:
+  TERM:
+  http_proxy:
+  https_proxy:
 
 x-config-petalinux:
   &config-petalinux
-  <<: *config-common
+  environment:
+    <<: *environment
   working_dir: "/home/${USER}/workspace/${PETALINUX_VER}"
   volumes:
     - "./workspace/${PETALINUX_VER}:/home/${USER}/workspace/${PETALINUX_VER}"
+
+x-config-vivado:
+  &config-vivado
+  environment:
+    <<: *environment
+    DISPLAY:
+  working_dir: "/home/${USER}/workspace/${VIVADO_VER}"
+  volumes:
+    - "./workspace/${VIVADO_VER}:/home/${USER}/workspace/${VIVADO_VER}"
+    - "/tmp/.X11-unix:/tmp/.X11-unix"
 
 services:
   petalinux:
@@ -25,5 +35,15 @@ services:
     <<: *config-petalinux
     image: petalinux:${PETALINUX_VER}-original
     hostname: petalinux-${PETALINUX_VER}-original
+
+  vivado:
+    <<: *config-vivado
+    image: vivado:${VIVADO_VER}-slim
+    hostname: vivado-${VIVADO_VER}-slim
+
+  vivado-original:
+    <<: *config-vivado
+    image: vivado:${VIVADO_VER}-original
+    hostname: vivado-${VIVADO_VER}-original
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :
