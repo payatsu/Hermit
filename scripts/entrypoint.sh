@@ -6,6 +6,8 @@ trap bash EXIT
 
 [ -n "${DEBUG_ENTRYPOINT}" ] && set -x
 
+[ -n "${USER}" ] || { echo USER is empty >&2; exit;}
+
 username=`tail -n 1 /etc/passwd | cut -d: -f1`
 if [ "${USER}" != "${username}" ]; then
     usermod -l ${USER} ${username} || exit
