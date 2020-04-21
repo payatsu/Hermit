@@ -1,0 +1,66 @@
+ARG USER=developer
+ARG install_dir=/opt/Xilinx
+ARG VITIS_VER=2019.2
+ARG baseimage=ubuntu:18.04
+
+FROM ${baseimage} AS vitis-yorishiro
+ARG USER
+ARG install_dir
+ARG VITIS_VER
+
+RUN \
+apt-get update && apt-get upgrade -y && \
+echo Asia/Tokyo > /etc/timezone && \
+DEBIAN_FRONTEND=noninteractive \
+apt-get install -y --no-install-recommends tzdata locales && \
+apt-get install -y --no-install-recommends \
+libgtk2.0-0 \
+libxtst6 \
+make \
+net-tools \
+psmisc \
+wget \
+xterm \
+&& \
+apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/* && \
+sed -i -e 's/^# \(ja_JP\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
+locale-gen && \
+sed -i -e '/PS1=/s/\\h/\\H/' /root/.bashrc /etc/skel/.bashrc && \
+groupadd ${USER} && \
+useradd -g ${USER} -m -s /bin/bash ${USER} && \
+echo root:root | chpasswd && \
+echo ${USER}:${USER} | chpasswd && \
+mkdir -pv ${install_dir} && \
+chown -Rv ${USER}:${USER} ${install_dir} && \
+echo . ${install_dir}/Vitis/${VITIS_VER}/settings64.sh >> /etc/profile
+
+FROM vitis-yorishiro AS vitis-original
+ARG USER
+ARG install_dir
+ARG VITIS_VER
+
+USER ${USER}
+RUN \
+mkdir -v /tmp/vitis && \
+wget --progress=dot:giga -O- http://repository/Xilinx_Vitis_${VITIS_VER}.tar.gz | tar xzf - -C /tmp/vitis --strip-components 1 && \
+echo 1 | /tmp/vitis/xsetup --batch ConfigGen && \
+cp -v ~/.Xilinx/install_config.txt ~/.Xilinx/install_config.txt.orig && \
+sed -i -e '/^Destination=/s%=.\+$%='${install_dir}'%' ~/.Xilinx/install_config.txt && \
+sed -i -e '/^Modules=/{s/:1/:0/g;s/\(Zynq UltraScale+ MPSoC\):./\1:1/}' ~/.Xilinx/install_config.txt && \
+sed -i -e '/^InstallOptions=/s/\(Enable WebTalk for Vivado to send usage statistics to Xilinx (Always enabled for WebPACK license)\):1/\1:0/' ~/.Xilinx/install_config.txt && \
+/tmp/vitis/xsetup --agree XilinxEULA,3rdPartyEULA,WebTalkTerms --batch Install --config ~/.Xilinx/install_config.txt && \
+echo removing /tmp/vitis && rm -fr /tmp/vitis
+
+FROM vitis-original AS vitis-sacrifice
+ARG install_dir
+
+FROM vitis-yorishiro AS vitis-slim
+ARG install_dir
+
+COPY --from=vitis-sacrifice ${install_dir} ${install_dir}
+ENV LANG=ja_JP.utf8 SHELL=/bin/bash
+COPY scripts/entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["bash"]
+
+# vim: set filetype=dockerfile :

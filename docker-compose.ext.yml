@@ -28,6 +28,14 @@ x-build-vivado:
     <<: *args
     VIVADO_VER:
 
+x-build-vitis:
+  &build-vitis
+  <<: *build-common
+  dockerfile: Dockerfile.vitis
+  args:
+    <<: *args
+    VITIS_VER:
+
 services:
   petalinux:
     build:
@@ -48,6 +56,16 @@ services:
     build:
       <<: *build-vivado
       target: vivado-original
+
+  vitis:
+    build:
+      <<: *build-vitis
+      target: vitis-slim
+
+  vitis-original:
+    build:
+      <<: *build-vitis
+      target: vitis-original
 
   repository:
     image: nginx:alpine

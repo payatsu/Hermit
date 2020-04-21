@@ -25,6 +25,16 @@ x-config-vivado:
     - "./workspace/${VIVADO_VER}:/home/${USER}/workspace/${VIVADO_VER}"
     - "/tmp/.X11-unix:/tmp/.X11-unix"
 
+x-config-vitis:
+  &config-vitis
+  environment:
+    <<: *environment
+    DISPLAY:
+  working_dir: "/home/${USER}/workspace/${VITIS_VER}"
+  volumes:
+    - "./workspace/${VITIS_VER}:/home/${USER}/workspace/${VITIS_VER}"
+    - "/tmp/.X11-unix:/tmp/.X11-unix"
+
 services:
   petalinux:
     <<: *config-petalinux
@@ -45,5 +55,15 @@ services:
     <<: *config-vivado
     image: vivado:${VIVADO_VER}-original
     hostname: vivado-${VIVADO_VER}-original
+
+  vitis:
+    <<: *config-vitis
+    image: vitis:${VITIS_VER}-slim
+    hostname: vitis-${VITIS_VER}-slim
+
+  vitis-original:
+    <<: *config-vitis
+    image: vitis:${VITIS_VER}-original
+    hostname: vitis-${VITIS_VER}-original
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :
