@@ -12,14 +12,6 @@ x-build-common:
   context: .
   network: nw
 
-x-build-petalinux:
-  &build-petalinux
-  <<: *build-common
-  dockerfile: Dockerfile.petalinux
-  args:
-    <<: *args
-    PETALINUX_VER:
-
 x-build-vivado:
   &build-vivado
   <<: *build-common
@@ -36,17 +28,15 @@ x-build-vitis:
     <<: *args
     VITIS_VER:
 
+x-build-petalinux:
+  &build-petalinux
+  <<: *build-common
+  dockerfile: Dockerfile.petalinux
+  args:
+    <<: *args
+    PETALINUX_VER:
+
 services:
-  petalinux:
-    build:
-      <<: *build-petalinux
-      target: petalinux-slim
-
-  petalinux-original:
-    build:
-      <<: *build-petalinux
-      target: petalinux-original
-
   vivado:
     build:
       <<: *build-vivado
@@ -66,6 +56,16 @@ services:
     build:
       <<: *build-vitis
       target: vitis-original
+
+  petalinux:
+    build:
+      <<: *build-petalinux
+      target: petalinux-slim
+
+  petalinux-original:
+    build:
+      <<: *build-petalinux
+      target: petalinux-original
 
   repository:
     image: nginx:alpine

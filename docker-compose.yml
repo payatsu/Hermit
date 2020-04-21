@@ -7,14 +7,6 @@ x-environment:
   http_proxy:
   https_proxy:
 
-x-config-petalinux:
-  &config-petalinux
-  environment:
-    <<: *environment
-  working_dir: "/home/${USER}/workspace/${PETALINUX_VER}"
-  volumes:
-    - "./workspace/${PETALINUX_VER}:/home/${USER}/workspace/${PETALINUX_VER}"
-
 x-config-vivado:
   &config-vivado
   environment:
@@ -35,17 +27,15 @@ x-config-vitis:
     - "./workspace/${VITIS_VER}:/home/${USER}/workspace/${VITIS_VER}"
     - "/tmp/.X11-unix:/tmp/.X11-unix"
 
+x-config-petalinux:
+  &config-petalinux
+  environment:
+    <<: *environment
+  working_dir: "/home/${USER}/workspace/${PETALINUX_VER}"
+  volumes:
+    - "./workspace/${PETALINUX_VER}:/home/${USER}/workspace/${PETALINUX_VER}"
+
 services:
-  petalinux:
-    <<: *config-petalinux
-    image: petalinux:${PETALINUX_VER}-slim
-    hostname: petalinux-${PETALINUX_VER}-slim
-
-  petalinux-original:
-    <<: *config-petalinux
-    image: petalinux:${PETALINUX_VER}-original
-    hostname: petalinux-${PETALINUX_VER}-original
-
   vivado:
     <<: *config-vivado
     image: vivado:${VIVADO_VER}-slim
@@ -65,5 +55,15 @@ services:
     <<: *config-vitis
     image: vitis:${VITIS_VER}-original
     hostname: vitis-${VITIS_VER}-original
+
+  petalinux:
+    <<: *config-petalinux
+    image: petalinux:${PETALINUX_VER}-slim
+    hostname: petalinux-${PETALINUX_VER}-slim
+
+  petalinux-original:
+    <<: *config-petalinux
+    image: petalinux:${PETALINUX_VER}-original
+    hostname: petalinux-${PETALINUX_VER}-original
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :
