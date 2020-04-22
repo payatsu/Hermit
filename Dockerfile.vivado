@@ -17,7 +17,6 @@ apt-get install -y --no-install-recommends \
 libxi6 \
 libxrender1 \
 libxtst6 \
-wget \
 && \
 apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/* && \
 sed -i -e 's/^# \(ja_JP\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
@@ -36,6 +35,10 @@ ARG USER
 ARG install_dir
 ARG VIVADO_VER
 
+RUN \
+apt-get update && apt-get upgrade -y && \
+apt-get install -y --no-install-recommends wget && \
+apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/*
 USER ${USER}
 RUN \
 mkdir -v /tmp/vivado && \
@@ -46,6 +49,8 @@ sed -i -e '/^Destination=/s%=.\+$%='${install_dir}'%' ~/.Xilinx/install_config.t
 sed -i -e '/^Modules=/{s/:1/:0/g;s/\(Zynq UltraScale+ MPSoC\):./\1:1/}' ~/.Xilinx/install_config.txt && \
 sed -i -e '/^InstallOptions=/s/\(Enable WebTalk for Vivado to send usage statistics to Xilinx (Always enabled for WebPACK license)\):1/\1:0/' ~/.Xilinx/install_config.txt && \
 /tmp/vivado/xsetup --agree XilinxEULA,3rdPartyEULA,WebTalkTerms --batch Install --config ~/.Xilinx/install_config.txt && \
+cp -v ~/.Xilinx/install_config.txt ${install_dir} && \
+cp -v ~/.Xilinx/install_config.txt.orig ${install_dir} && \
 echo removing /tmp/vivado && rm -fr /tmp/vivado
 
 FROM vivado-original AS vivado-sacrifice
