@@ -12,9 +12,9 @@ x-config-vivado:
   environment:
     <<: *environment
     DISPLAY:
-  working_dir: "/home/${USER}/workspace/${VIVADO_VER}"
+  working_dir: "/home/${USER}"
   volumes:
-    - "./workspace/${VIVADO_VER}:/home/${USER}/workspace/${VIVADO_VER}"
+    - "./workspace/${VIVADO_VER}:/home/${USER}"
     - "/tmp/.X11-unix:/tmp/.X11-unix"
 
 x-config-vitis:
@@ -22,18 +22,18 @@ x-config-vitis:
   environment:
     <<: *environment
     DISPLAY:
-  working_dir: "/home/${USER}/workspace/${VITIS_VER}"
+  working_dir: "/home/${USER}"
   volumes:
-    - "./workspace/${VITIS_VER}:/home/${USER}/workspace/${VITIS_VER}"
+    - "./workspace/${VITIS_VER}:/home/${USER}"
     - "/tmp/.X11-unix:/tmp/.X11-unix"
 
 x-config-petalinux:
   &config-petalinux
   environment:
     <<: *environment
-  working_dir: "/home/${USER}/workspace/${PETALINUX_VER}"
+  working_dir: "/home/${USER}"
   volumes:
-    - "./workspace/${PETALINUX_VER}:/home/${USER}/workspace/${PETALINUX_VER}"
+    - "./workspace/${PETALINUX_VER}:/home/${USER}"
 
 services:
   vivado:
