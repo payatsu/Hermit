@@ -1,17 +1,32 @@
 #!/bin/bash -l
 
+[ -n "${TRACE_ENTRYPOINT}" ] && set -x
+
 # set trap that invokes new `bash` with root permission whenever an error occurs.
 # errors are expected to cause `exit`(see below).
-trap bash EXIT
+trap atexit EXIT
 
-[ -n "${DEBUG_ENTRYPOINT}" ] && set -x
+atexit()
+{
+    echo shell/environment variables: >&2
+    set >&2
+    echo >&2
+
+    echo environment variables: >&2
+    env >&2
+    echo >&2
+
+    bash
+}
+
+[ -n "${INTERACTIVE_ENTRYPOINT}" ] && exit
 
 [ -n "${USER}" ] || { echo USER is empty >&2; exit;}
 
 username=`tail -n 1 /etc/passwd | cut -d: -f1`
 if [ "${USER}" != "${username}" ]; then
-    usermod -l ${USER} ${username} || exit
-    cp -Tr /etc/skel /home/${USER} || exit
+    usermod -l ${USER} -d /home/${USER} ${username} || exit
+    [ -f /home/${USER}/.profile ] || cp -Tr /etc/skel /home/${USER} || exit
 fi
 
 groupname=`tail -n 1 /etc/group | cut -d: -f1`
@@ -19,7 +34,7 @@ if [ "${USER}" != "${groupname}" ]; then
     groupmod -n ${USER} ${groupname} || exit
 fi
 
-chown  ${USER}:${USER} . || exit
+chown ${USER}:${USER} /home/${USER} || exit
 
 # the `bash` process running this script never EXIT(`exit` successfully),
 # because it does `exec` here.
