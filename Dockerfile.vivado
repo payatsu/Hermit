@@ -41,6 +41,7 @@ apt-get install -y --no-install-recommends wget && \
 apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/*
 USER ${USER}
 RUN \
+unset http_proxy https_proxy; \
 mkdir -v /tmp/vivado && \
 wget --progress=dot:giga -O- http://repository/Xilinx_Vivado_${VIVADO_VER}.tar.gz | tar xzf - -C /tmp/vivado --strip-components 1 && \
 echo 2 | /tmp/vivado/xsetup --batch ConfigGen && \
