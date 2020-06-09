@@ -79,9 +79,10 @@ USER ${USER}
 RUN \
 unset http_proxy https_proxy; \
 installer=petalinux-v${PETALINUX_VER}-final-installer.run; \
+dflag=`[[ 2019.2 < ${PETALINUX_VER} ]] && echo --dir`; \
 wget --progress=dot:giga -P /tmp http://repository/${installer} && \
 chmod a+x /tmp/${installer} && \
-(cd /tmp; yes | ./${installer} ${install_dir}) && \
+(cd /tmp; yes | ./${installer} ${dflag} ${install_dir}) && \
 rm -fv /tmp/${installer}
 
 FROM petalinux-original AS petalinux-sacrifice
