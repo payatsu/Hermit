@@ -49,8 +49,10 @@ apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/*
 USER ${USER}
 RUN \
 unset http_proxy https_proxy; \
-mkdir -v /tmp/vitis && \
-wget --progress=dot:giga -O- http://repository/Xilinx_Vitis_${VITIS_VER}.tar.gz | tar xzf - -C /tmp/vitis --strip-components 1 && \
+mkdir -v /tmp/vitis && ( \
+wget --progress=dot:giga -O- http://repository/Xilinx_Unified_${VITIS_VER}.tar.gz || \
+wget --progress=dot:giga -O- http://repository/Xilinx_Vitis_${VITIS_VER}.tar.gz ) \
+| tar xzf - -C /tmp/vitis --strip-components 1 && \
 echo 1 | /tmp/vitis/xsetup --batch ConfigGen && \
 cp -v ~/.Xilinx/install_config.txt ~/.Xilinx/install_config.txt.orig && \
 sed -i -e '/^Destination=/s%=.\+$%='${install_dir}'%' ~/.Xilinx/install_config.txt && \
