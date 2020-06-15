@@ -36,6 +36,10 @@ echo ${USER}:${USER} | chpasswd && \
 mkdir -pv ${install_dir} && \
 chown -Rv ${USER}:${USER} ${install_dir} && \
 echo . ${install_dir}/Vitis/${VITIS_VER}/settings64.sh >> /etc/profile
+ENV LANG=ja_JP.utf8 SHELL=/bin/bash
+COPY scripts/entrypoint.bash /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
+CMD ["bash"]
 
 FROM vitis-yorishiro AS vitis-original
 ARG USER
@@ -62,6 +66,7 @@ sed -i -e '/^InstallOptions=/s/\(Enable WebTalk for Vivado to send usage statist
 cp -v ~/.Xilinx/install_config.txt ${install_dir} && \
 cp -v ~/.Xilinx/install_config.txt.orig ${install_dir} && \
 echo removing /tmp/vitis && rm -fr /tmp/vitis
+USER root
 
 FROM vitis-original AS vitis-sacrifice
 ARG install_dir
@@ -70,9 +75,5 @@ FROM vitis-yorishiro AS vitis-slim
 ARG install_dir
 
 COPY --from=vitis-sacrifice ${install_dir} ${install_dir}
-ENV LANG=ja_JP.utf8 SHELL=/bin/bash
-COPY scripts/entrypoint.bash /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
-CMD ["bash"]
 
 # vim: set filetype=dockerfile :

@@ -29,6 +29,10 @@ echo ${USER}:${USER} | chpasswd && \
 mkdir -pv ${install_dir} && \
 chown -Rv ${USER}:${USER} ${install_dir} && \
 echo . ${install_dir}/Vivado/${VIVADO_VER}/settings64.sh >> /etc/profile
+ENV LANG=ja_JP.utf8 SHELL=/bin/bash
+COPY scripts/entrypoint.bash /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
+CMD ["bash"]
 
 FROM vivado-yorishiro AS vivado-original
 ARG USER
@@ -55,6 +59,7 @@ sed -i -e '/^InstallOptions=/s/\(Enable WebTalk for Vivado to send usage statist
 cp -v ~/.Xilinx/install_config.txt ${install_dir} && \
 cp -v ~/.Xilinx/install_config.txt.orig ${install_dir} && \
 echo removing /tmp/vivado && rm -fr /tmp/vivado
+USER root
 
 FROM vivado-original AS vivado-sacrifice
 ARG install_dir
@@ -63,9 +68,5 @@ FROM vivado-yorishiro AS vivado-slim
 ARG install_dir
 
 COPY --from=vivado-sacrifice ${install_dir} ${install_dir}
-ENV LANG=ja_JP.utf8 SHELL=/bin/bash
-COPY scripts/entrypoint.bash /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
-CMD ["bash"]
 
 # vim: set filetype=dockerfile :
