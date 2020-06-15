@@ -72,6 +72,10 @@ echo ${USER}:${USER} | chpasswd && \
 mkdir -pv ${install_dir} && \
 chown -Rv ${USER}:${USER} ${install_dir} && \
 echo . ${install_dir}/settings.sh >> /etc/profile
+ENV LANG=ja_JP.utf8 SHELL=/bin/bash
+COPY scripts/entrypoint.bash /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
+CMD ["bash"]
 
 FROM petalinux-yorishiro AS petalinux-original
 ARG USER
@@ -87,6 +91,7 @@ wget --progress=dot:giga -P /tmp http://repository/${installer} && \
 chmod a+x /tmp/${installer} && \
 (cd /tmp; yes | ./${installer} ${dflag} ${install_dir}) && \
 rm -fv /tmp/${installer}
+USER root
 
 FROM petalinux-original AS petalinux-sacrifice
 ARG install_dir
@@ -100,9 +105,5 @@ FROM petalinux-yorishiro AS petalinux-slim
 ARG install_dir
 
 COPY --from=petalinux-sacrifice ${install_dir} ${install_dir}
-ENV LANG=ja_JP.utf8 SHELL=/bin/bash
-COPY scripts/entrypoint.bash /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
-CMD ["bash"]
 
 # vim: set filetype=dockerfile :
