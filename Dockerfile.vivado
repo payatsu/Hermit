@@ -28,7 +28,7 @@ echo root:root | chpasswd && \
 echo ${USER}:${USER} | chpasswd && \
 mkdir -pv ${install_dir} && \
 chown -Rv ${USER}:${USER} ${install_dir} && \
-echo . ${install_dir}/Vivado/${VIVADO_VER}/settings64.sh >> /etc/profile
+echo "[ -f ${install_dir}/Vivado/${VIVADO_VER}/settings64.sh ] && . ${install_dir}/Vivado/${VIVADO_VER}/settings64.sh" >> /etc/profile
 ENV LANG=ja_JP.utf8 SHELL=/bin/bash
 COPY scripts/entrypoint.bash /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]

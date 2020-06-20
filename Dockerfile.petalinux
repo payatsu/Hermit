@@ -71,7 +71,7 @@ echo root:root | chpasswd && \
 echo ${USER}:${USER} | chpasswd && \
 mkdir -pv ${install_dir} && \
 chown -Rv ${USER}:${USER} ${install_dir} && \
-echo . ${install_dir}/settings.sh >> /etc/profile
+echo "[ -f ${install_dir}/settings.sh ] && . ${install_dir}/settings.sh" >> /etc/profile
 ENV LANG=ja_JP.utf8 SHELL=/bin/bash
 COPY scripts/entrypoint.bash /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
@@ -91,7 +91,7 @@ wget --progress=dot:giga -P /tmp http://repository/${installer} && \
 chmod a+x /tmp/${installer} && \
 (cd /tmp; yes | ./${installer} ${dflag} ${install_dir}) && \
 rm -fv /tmp/${installer} && \
-find ${install_dir} -type f -name rlwrap -exec sh -c 'rm -v {}; ln -sv /usr/bin/rlwrap {}' \;
+find ${install_dir} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
 USER root
 
 FROM petalinux-original AS petalinux-sacrifice
