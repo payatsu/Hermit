@@ -36,6 +36,8 @@ fi
 chown ${USER}:${USER} /home/${USER} || exit
 [ -f /home/${USER}/.profile ] || find /etc/skel -type f -exec install -o ${USER} -g ${USER} -m 644 -t /home/${USER} {} + || exit
 
+chown ${USER} `tty` || exit
+
 # the `bash` process running this script never EXIT(`exit` successfully),
 # because it does `exec` here.
 exec runuser -u ${USER} -- "$@"
