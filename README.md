@@ -90,9 +90,9 @@ $ docker image prune -f
 
 The above build command, by default, builds corresponding
 images with revisions specified in [.env](.env).
-For example, `petalinux:2019.2-slim` is built for PetaLinux Tools,
+For example, `petalinux:2020.2-slim` is built for PetaLinux Tools,
 as specified in [.env](.env), given that ofcourse
-the installer for v2019.2 has been placed.
+the installer for v2020.2 has been placed.
 
 If you prefer to build each images with other revisions of the corresponding tools,
 run the build command like(e.g. with PetaLinux Tools v2018.2):
@@ -124,7 +124,7 @@ If you want to work with Bash interactive shell, run the following command(e.g. 
 $ docker-compose run --rm petalinux # with image for PetaLinux Tools
 ```
 This starts a interactive `bash` process on a container with
-the image `petalinux-20xx.x-slim`(by default `2019.2`).
+the image `petalinux-20xx.x-slim`(by default `2020.2`).
 The started `bash` process is source'd, prior to interaction with you,
 so that PetaLinux Tools commands(e.g. `petalinux-config`) are available.
 

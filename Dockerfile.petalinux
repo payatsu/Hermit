@@ -80,7 +80,7 @@ CMD ["bash"]
 FROM petalinux-yorishiro AS petalinux-original
 ARG USER
 ARG install_dir
-ARG PETALINUX_VER=2019.2
+ARG PETALINUX_VER=2020.2
 
 USER ${USER}
 RUN \
