@@ -24,6 +24,7 @@ net-tools \
 psmisc \
 python \
 rlwrap \
+unzip \
 x11-utils \
 xterm \
 xz-utils \
