@@ -23,6 +23,7 @@ make \
 net-tools \
 psmisc \
 python \
+rlwrap \
 x11-utils \
 xterm \
 xz-utils \
@@ -67,7 +68,8 @@ sed -i -e '/^InstallOptions=/s/\(Enable WebTalk for Vivado to send usage statist
 /tmp/vitis/xsetup --agree XilinxEULA,3rdPartyEULA,WebTalkTerms --batch Install --config ~/.Xilinx/install_config.txt && \
 cp -v ~/.Xilinx/install_config.txt ${install_dir} && \
 cp -v ~/.Xilinx/install_config.txt.orig ${install_dir} && \
-echo removing /tmp/vitis && rm -fr /tmp/vitis
+echo removing /tmp/vitis && rm -fr /tmp/vitis && \
+find ${install_dir} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
 USER root
 
 FROM vitis-original AS vitis-sacrifice
