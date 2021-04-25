@@ -23,6 +23,7 @@ make \
 net-tools \
 psmisc \
 python \
+x11-utils \
 xterm \
 xz-utils \
 && \
