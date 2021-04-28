@@ -72,4 +72,15 @@ ARG install_dir
 
 COPY --from=vivado-sacrifice ${install_dir} ${install_dir}
 
+FROM vivado-slim AS vivado-daemon
+RUN \
+apt-get update && apt-get upgrade -y && \
+apt-get install -y --no-install-recommends openssh-server xauth && \
+mkdir -v /run/sshd && \
+sed -i -e 's/^#\?AddressFamily.\+$/AddressFamily inet/' /etc/ssh/sshd_config && \
+apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/*
+EXPOSE 22
+ENTRYPOINT ["/usr/sbin/sshd", "-D"]
+CMD []
+
 # vim: set filetype=dockerfile :

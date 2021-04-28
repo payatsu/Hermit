@@ -37,35 +37,50 @@ x-build-petalinux:
     PETALINUX_VER:
 
 services:
-  vivado:
-    build:
-      <<: *build-vivado
-      target: vivado-slim
-
   vivado-original:
     build:
       <<: *build-vivado
       target: vivado-original
 
-  vitis:
+  vivado-slim:
     build:
-      <<: *build-vitis
-      target: vitis-slim
+      <<: *build-vivado
+      target: vivado-slim
+
+  vivado-daemon:
+    build:
+      <<: *build-vivado
+      target: vivado-daemon
 
   vitis-original:
     build:
       <<: *build-vitis
       target: vitis-original
 
-  petalinux:
+  vitis-slim:
     build:
-      <<: *build-petalinux
-      target: petalinux-slim
+      <<: *build-vitis
+      target: vitis-slim
+
+  vitis-daemon:
+    build:
+      <<: *build-vitis
+      target: vitis-daemon
 
   petalinux-original:
     build:
       <<: *build-petalinux
       target: petalinux-original
+
+  petalinux-slim:
+    build:
+      <<: *build-petalinux
+      target: petalinux-slim
+
+  petalinux-daemon:
+    build:
+      <<: *build-petalinux
+      target: petalinux-daemon
 
   repository:
     image: nginx:alpine

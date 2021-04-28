@@ -42,34 +42,58 @@ x-config-petalinux:
     - "/etc/localtime:/etc/localtime:ro"
 
 services:
-  vivado:
-    <<: *config-vivado
-    image: vivado:${VIVADO_VER}-slim
-    hostname: vivado-${VIVADO_VER}-slim
-
   vivado-original:
     <<: *config-vivado
     image: vivado:${VIVADO_VER}-original
     hostname: vivado-${VIVADO_VER}-original
 
-  vitis:
-    <<: *config-vitis
-    image: vitis:${VITIS_VER}-slim
-    hostname: vitis-${VITIS_VER}-slim
+  vivado-slim:
+    <<: *config-vivado
+    image: vivado:${VIVADO_VER}-slim
+    hostname: vivado-${VIVADO_VER}-slim
+
+  vivado-daemon:
+    <<: *config-vivado
+    image: vivado:${VIVADO_VER}-daemon
+    hostname: vivado-${VIVADO_VER}-daemon
+    restart: unless-stopped
+    ports:
+      - "10022:22"
 
   vitis-original:
     <<: *config-vitis
     image: vitis:${VITIS_VER}-original
     hostname: vitis-${VITIS_VER}-original
 
-  petalinux:
-    <<: *config-petalinux
-    image: petalinux:${PETALINUX_VER}-slim
-    hostname: petalinux-${PETALINUX_VER}-slim
+  vitis-slim:
+    <<: *config-vitis
+    image: vitis:${VITIS_VER}-slim
+    hostname: vitis-${VITIS_VER}-slim
+
+  vitis-daemon:
+    <<: *config-vitis
+    image: vitis:${VITIS_VER}-daemon
+    hostname: vitis-${VITIS_VER}-daemon
+    restart: unless-stopped
+    ports:
+      - "10122:22"
 
   petalinux-original:
     <<: *config-petalinux
     image: petalinux:${PETALINUX_VER}-original
     hostname: petalinux-${PETALINUX_VER}-original
+
+  petalinux-slim:
+    <<: *config-petalinux
+    image: petalinux:${PETALINUX_VER}-slim
+    hostname: petalinux-${PETALINUX_VER}-slim
+
+  petalinux-daemon:
+    <<: *config-petalinux
+    image: petalinux:${PETALINUX_VER}-daemon
+    hostname: petalinux-${PETALINUX_VER}-daemon
+    restart: unless-stopped
+    ports:
+      - "10222:22"
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :

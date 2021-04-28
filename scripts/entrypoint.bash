@@ -23,12 +23,12 @@ atexit()
 
 [ -n "${USER}" ] || { echo USER is empty >&2; exit;}
 
-username=`tail -n 1 /etc/passwd | cut -d: -f1`
+username=`grep -e '^[^:]\+:[^:]\+:1000:' /etc/passwd | cut -d: -f1`
 if [ "${USER}" != "${username}" ]; then
     usermod -l ${USER} -d /home/${USER} ${username} || exit
 fi
 
-groupname=`tail -n 1 /etc/group | cut -d: -f1`
+groupname=`grep -e '^[^:]\+:[^:]\+:1000:' /etc/group | cut -d: -f1`
 if [ "${USER}" != "${groupname}" ]; then
     groupmod -n ${USER} ${groupname} || exit
 fi
