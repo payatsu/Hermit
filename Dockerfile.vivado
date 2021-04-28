@@ -36,7 +36,7 @@ COPY scripts/entrypoint.bash /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
 CMD ["bash"]
 
-FROM vivado-yorishiro AS vivado-original
+FROM vivado-yorishiro AS vivado-standard
 ARG USER
 ARG install_dir
 ARG VIVADO_VER
@@ -64,7 +64,7 @@ echo removing /tmp/vivado && rm -fr /tmp/vivado && \
 find ${install_dir} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
 USER root
 
-FROM vivado-original AS vivado-sacrifice
+FROM vivado-standard AS vivado-sacrifice
 ARG install_dir
 
 FROM vivado-yorishiro AS vivado-slim

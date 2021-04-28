@@ -37,10 +37,10 @@ x-build-petalinux:
     PETALINUX_VER:
 
 services:
-  vivado-original:
+  vivado-standard:
     build:
       <<: *build-vivado
-      target: vivado-original
+      target: vivado-standard
 
   vivado-slim:
     build:
@@ -52,10 +52,10 @@ services:
       <<: *build-vivado
       target: vivado-daemon
 
-  vitis-original:
+  vitis-standard:
     build:
       <<: *build-vitis
-      target: vitis-original
+      target: vitis-standard
 
   vitis-slim:
     build:
@@ -67,10 +67,10 @@ services:
       <<: *build-vitis
       target: vitis-daemon
 
-  petalinux-original:
+  petalinux-standard:
     build:
       <<: *build-petalinux
-      target: petalinux-original
+      target: petalinux-standard
 
   petalinux-slim:
     build:

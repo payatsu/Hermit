@@ -45,7 +45,7 @@ COPY scripts/entrypoint.bash /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
 CMD ["bash"]
 
-FROM vitis-yorishiro AS vitis-original
+FROM vitis-yorishiro AS vitis-standard
 ARG USER
 ARG install_dir
 ARG VITIS_VER
@@ -73,7 +73,7 @@ echo removing /tmp/vitis && rm -fr /tmp/vitis && \
 find ${install_dir} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
 USER root
 
-FROM vitis-original AS vitis-sacrifice
+FROM vitis-standard AS vitis-sacrifice
 ARG install_dir
 
 FROM vitis-yorishiro AS vitis-slim

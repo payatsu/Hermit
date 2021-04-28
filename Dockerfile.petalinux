@@ -77,7 +77,7 @@ COPY scripts/entrypoint.bash /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
 CMD ["bash"]
 
-FROM petalinux-yorishiro AS petalinux-original
+FROM petalinux-yorishiro AS petalinux-standard
 ARG USER
 ARG install_dir
 ARG PETALINUX_VER=2020.2
@@ -94,7 +94,7 @@ rm -fv /tmp/${installer} && \
 find ${install_dir} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
 USER root
 
-FROM petalinux-original AS petalinux-sacrifice
+FROM petalinux-standard AS petalinux-sacrifice
 ARG install_dir
 
 RUN \

@@ -42,10 +42,10 @@ x-config-petalinux:
     - "/etc/localtime:/etc/localtime:ro"
 
 services:
-  vivado-original:
+  vivado-standard:
     <<: *config-vivado
-    image: vivado:${VIVADO_VER}-original
-    hostname: vivado-${VIVADO_VER}-original
+    image: vivado:${VIVADO_VER}-standard
+    hostname: vivado-${VIVADO_VER}-standard
 
   vivado-slim:
     <<: *config-vivado
@@ -60,10 +60,10 @@ services:
     ports:
       - "10022:22"
 
-  vitis-original:
+  vitis-standard:
     <<: *config-vitis
-    image: vitis:${VITIS_VER}-original
-    hostname: vitis-${VITIS_VER}-original
+    image: vitis:${VITIS_VER}-standard
+    hostname: vitis-${VITIS_VER}-standard
 
   vitis-slim:
     <<: *config-vitis
@@ -78,10 +78,10 @@ services:
     ports:
       - "10122:22"
 
-  petalinux-original:
+  petalinux-standard:
     <<: *config-petalinux
-    image: petalinux:${PETALINUX_VER}-original
-    hostname: petalinux-${PETALINUX_VER}-original
+    image: petalinux:${PETALINUX_VER}-standard
+    hostname: petalinux-${PETALINUX_VER}-standard
 
   petalinux-slim:
     <<: *config-petalinux
