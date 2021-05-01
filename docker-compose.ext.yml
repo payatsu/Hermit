@@ -10,7 +10,7 @@ x-args:
 x-build-common:
   &build-common
   context: .
-  network: nw
+  network: build
 
 x-build-vivado:
   &build-vivado
@@ -87,10 +87,10 @@ services:
     volumes:
       - ".:/usr/share/nginx/html:ro"
     networks:
-      - nw
+      - build
 
 networks:
-  nw:
-    name: nw
+  build:
+    name: build
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :
