@@ -15,12 +15,14 @@ DEBIAN_FRONTEND=noninteractive \
 apt-get install -y --no-install-recommends tzdata locales && \
 apt-get install -y --no-install-recommends \
 fontconfig \
+libcurl4 \
 libxi6 \
 libxrender1 \
 libxtst6 \
 rlwrap \
 && \
 apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/* && \
+sed -i -e 's/^# \(en_US\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
 sed -i -e 's/^# \(ja_JP\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
 locale-gen && \
 sed -i -e '/PS1=/s/\\h/\\H/' /root/.bashrc /etc/skel/.bashrc && \
@@ -63,6 +65,13 @@ cp -v ~/.Xilinx/install_config.txt.orig ${install_dir} && \
 echo removing /tmp/vivado && rm -fr /tmp/vivado && \
 find ${install_dir} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
 USER root
+RUN \
+find ${install_dir}/Vivado -type f -name git-remote-https | sort | xargs -n 1 -I @ \
+sh -c 'cd `dirname @`/../../bin; \
+echo PATH=\${PATH}:`pwd` >> ${install_dir}/Vivado/${VIVADO_VER}/.settings64-Vivado.sh && \
+for f in ../libexec/git-core/git-*; do \
+	ln -sv ${f} `basename ${f}`; \
+done; exit 0'
 
 FROM vivado-standard AS vivado-sacrifice
 ARG install_dir
