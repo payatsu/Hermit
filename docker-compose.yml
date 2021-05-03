@@ -57,6 +57,10 @@ services:
     image: vivado:${VIVADO_VER}-daemon
     hostname: vivado-${VIVADO_VER}-daemon
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - vivado
     ports:
       - "10022:22"
 
@@ -75,6 +79,10 @@ services:
     image: vitis:${VITIS_VER}-daemon
     hostname: vitis-${VITIS_VER}-daemon
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - vitis
     ports:
       - "10122:22"
 
@@ -93,6 +101,10 @@ services:
     image: petalinux:${PETALINUX_VER}-daemon
     hostname: petalinux-${PETALINUX_VER}-daemon
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - petalinux
     ports:
       - "10222:22"
 
