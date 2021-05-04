@@ -49,11 +49,13 @@ services:
     <<: *config-vivado
     image: vivado:${VIVADO_VER}-standard
     hostname: vivado-${VIVADO_VER}-standard
+    profiles: [non-default]
 
   vivado-slim:
     <<: *config-vivado
     image: vivado:${VIVADO_VER}-slim
     hostname: vivado-${VIVADO_VER}-slim
+    profiles: [non-default]
 
   vivado-daemon:
     <<: *config-vivado
@@ -69,11 +71,13 @@ services:
     <<: *config-vitis
     image: vitis:${VITIS_VER}-standard
     hostname: vitis-${VITIS_VER}-standard
+    profiles: [non-default]
 
   vitis-slim:
     <<: *config-vitis
     image: vitis:${VITIS_VER}-slim
     hostname: vitis-${VITIS_VER}-slim
+    profiles: [non-default]
 
   vitis-daemon:
     <<: *config-vitis
@@ -89,11 +93,13 @@ services:
     <<: *config-petalinux
     image: petalinux:${PETALINUX_VER}-standard
     hostname: petalinux-${PETALINUX_VER}-standard
+    profiles: [non-default]
 
   petalinux-slim:
     <<: *config-petalinux
     image: petalinux:${PETALINUX_VER}-slim
     hostname: petalinux-${PETALINUX_VER}-slim
+    profiles: [non-default]
 
   petalinux-daemon:
     <<: *config-petalinux
