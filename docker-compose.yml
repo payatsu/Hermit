@@ -63,7 +63,7 @@ services:
     networks:
       default:
         aliases:
-          - vivado
+          - vivado-${VIVADO_VER}
 
   vitis-standard:
     <<: *config-vitis
@@ -83,7 +83,7 @@ services:
     networks:
       default:
         aliases:
-          - vitis
+          - vitis-${VITIS_VER}
 
   petalinux-standard:
     <<: *config-petalinux
@@ -103,7 +103,7 @@ services:
     networks:
       default:
         aliases:
-          - petalinux
+          - petalinux-${PETALINUX_VER}
 
   frontend:
     <<: *common
@@ -117,5 +117,9 @@ services:
           - frontend
     ports:
       - "10022:22"
+    depends_on:
+      - vivado-daemon
+      - vitis-daemon
+      - petalinux-daemon
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :
