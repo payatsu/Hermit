@@ -1,0 +1,30 @@
+ARG USER=developer
+ARG install_dir=/opt/Xilinx
+ARG baseimage=ubuntu:18.04
+
+FROM ${baseimage}
+ARG USER
+ARG install_dir
+
+RUN \
+apt-get update && apt-get upgrade -y && \
+echo Asia/Tokyo > /etc/timezone && \
+DEBIAN_FRONTEND=noninteractive \
+apt-get install -y --no-install-recommends tzdata locales && \
+apt-get install -y --no-install-recommends openssh-server xauth && \
+apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/* && \
+sed -i -e 's/^# \(en_US\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
+sed -i -e 's/^# \(ja_JP\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
+locale-gen && \
+sed -i -e '/PS1=/s/\\h/\\H/' /root/.bashrc /etc/skel/.bashrc && \
+groupadd ${USER} && \
+useradd -g ${USER} -m -s /bin/bash ${USER} && \
+echo root:root | chpasswd && \
+echo ${USER}:${USER} | chpasswd && \
+mkdir -v /run/sshd && \
+sed -i -e 's/^#\?AddressFamily.\+$/AddressFamily inet/' /etc/ssh/sshd_config
+ENV LANG=ja_JP.UTF-8 SHELL=/bin/bash
+EXPOSE 22
+ENTRYPOINT ["/usr/sbin/sshd", "-D"]
+
+# vim: set filetype=dockerfile :

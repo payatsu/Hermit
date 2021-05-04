@@ -82,6 +82,12 @@ services:
       <<: *build-petalinux
       target: petalinux-daemon
 
+  frontend:
+    build:
+      <<: *build-common
+      dockerfile: Dockerfile.frontend
+      args: *args
+
   repository:
     image: nginx:alpine
     volumes:

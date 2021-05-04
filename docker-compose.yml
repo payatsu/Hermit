@@ -1,5 +1,9 @@
 version: "3.7"
 
+x-common:
+  &common
+  init: true
+
 x-environment:
   &environment
   USER:
@@ -9,11 +13,11 @@ x-environment:
 
 x-config-vivado:
   &config-vivado
+  <<: *common
   environment:
     <<: *environment
     DISPLAY:
   working_dir: "/home/${USER}"
-  init: true
   volumes:
     - "./workspace/${VIVADO_VER}:/home/${USER}"
     - "/etc/localtime:/etc/localtime:ro"
@@ -21,11 +25,11 @@ x-config-vivado:
 
 x-config-vitis:
   &config-vitis
+  <<: *common
   environment:
     <<: *environment
     DISPLAY:
   working_dir: "/home/${USER}"
-  init: true
   volumes:
     - "./workspace/${VITIS_VER}:/home/${USER}"
     - "/etc/localtime:/etc/localtime:ro"
@@ -33,10 +37,9 @@ x-config-vitis:
 
 x-config-petalinux:
   &config-petalinux
-  environment:
-    <<: *environment
+  <<: *common
+  environment: *environment
   working_dir: "/home/${USER}"
-  init: true
   volumes:
     - "./workspace/${PETALINUX_VER}:/home/${USER}"
     - "/etc/localtime:/etc/localtime:ro"
@@ -61,8 +64,6 @@ services:
       default:
         aliases:
           - vivado
-    ports:
-      - "10022:22"
 
   vitis-standard:
     <<: *config-vitis
@@ -83,8 +84,6 @@ services:
       default:
         aliases:
           - vitis
-    ports:
-      - "10122:22"
 
   petalinux-standard:
     <<: *config-petalinux
@@ -105,7 +104,18 @@ services:
       default:
         aliases:
           - petalinux
+
+  frontend:
+    <<: *common
+    environment: *environment
+    image: xilinx-frontend
+    hostname: xilinx-frontend
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - frontend
     ports:
-      - "10222:22"
+      - "10022:22"
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :
