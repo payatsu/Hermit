@@ -20,7 +20,7 @@ x-config-vivado:
     DISPLAY:
   working_dir: "/home/${USER}"
   volumes:
-    - "./workspace/${VIVADO_VER}:/home/${USER}"
+    - "./workspace/${VIVADO_VER}:/home"
     - "etc-vivado:/etc"
     - "/etc/localtime:/etc/localtime:ro"
     - "/tmp/.X11-unix:/tmp/.X11-unix"
@@ -33,7 +33,7 @@ x-config-vitis:
     DISPLAY:
   working_dir: "/home/${USER}"
   volumes:
-    - "./workspace/${VITIS_VER}:/home/${USER}"
+    - "./workspace/${VITIS_VER}:/home"
     - "etc-vitis:/etc"
     - "/etc/localtime:/etc/localtime:ro"
     - "/tmp/.X11-unix:/tmp/.X11-unix"
@@ -44,7 +44,7 @@ x-config-petalinux:
   environment: *environment
   working_dir: "/home/${USER}"
   volumes:
-    - "./workspace/${PETALINUX_VER}:/home/${USER}"
+    - "./workspace/${PETALINUX_VER}:/home"
     - "etc-petalinux:/etc"
     - "/etc/localtime:/etc/localtime:ro"
 
@@ -120,6 +120,7 @@ services:
     environment: *environment
     volumes:
       - "etc-frontend:/etc"
+      - "home-frontend:/home"
     image: xilinx-frontend
     hostname: xilinx-frontend
     restart: unless-stopped
@@ -139,5 +140,6 @@ volumes:
   etc-vitis:
   etc-petalinux:
   etc-frontend:
+  home-frontend:
 
 # vim: set expandtab shiftwidth=0 tabstop=2 :
