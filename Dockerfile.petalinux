@@ -114,7 +114,6 @@ mkdir -v /run/sshd && \
 sed -i -e 's/^#\?AddressFamily.\+$/AddressFamily inet/' /etc/ssh/sshd_config && \
 apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/*
 EXPOSE 22
-ENTRYPOINT ["/usr/sbin/sshd", "-D"]
-CMD []
+CMD ["/usr/sbin/sshd", "-D"]
 
 # vim: set filetype=dockerfile :

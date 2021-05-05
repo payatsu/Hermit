@@ -25,6 +25,8 @@ mkdir -v /run/sshd && \
 sed -i -e 's/^#\?AddressFamily.\+$/AddressFamily inet/' /etc/ssh/sshd_config
 ENV LANG=ja_JP.UTF-8 SHELL=/bin/bash
 EXPOSE 22
-ENTRYPOINT ["/usr/sbin/sshd", "-D"]
+COPY scripts/entrypoint.bash /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
+CMD ["/usr/sbin/sshd", "-D"]
 
 # vim: set filetype=dockerfile :

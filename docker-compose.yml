@@ -7,6 +7,7 @@ x-common:
 x-environment:
   &environment
   USER:
+  USERS:
   TERM:
   http_proxy:
   https_proxy:
