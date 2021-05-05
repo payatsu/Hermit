@@ -37,7 +37,7 @@ chown ${USER}:${USER} /home/${USER} || exit
 [ -f /home/${USER}/.profile ] || find /etc/skel -type f -exec install -o ${USER} -g ${USER} -m 644 -t /home/${USER} {} + || exit
 
 for u in ${USERS}; do
-    grep -e "^${u}" /etc/passwd && continue
+    grep -qe "^${u}" /etc/passwd && continue
     useradd -g ${groupname} -m -s /bin/bash ${u} || return
     echo ${u}:${u} | chpasswd || return
 done
