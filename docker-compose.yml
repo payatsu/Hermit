@@ -130,10 +130,6 @@ services:
           - frontend
     ports:
       - "10022:22"
-    depends_on:
-      - vivado-daemon
-      - vitis-daemon
-      - petalinux-daemon
 
 volumes:
   etc-vivado:
