@@ -36,6 +36,12 @@ x-build-petalinux:
     <<: *args
     PETALINUX_VER:
 
+x-build-sdk:
+  &build-sdk
+  <<: *build-common
+  dockerfile: Dockerfile.sdk
+  args: *args
+
 services:
   vivado-standard:
     build:
@@ -81,6 +87,16 @@ services:
     build:
       <<: *build-petalinux
       target: petalinux-daemon
+
+  sdk-standard:
+    build:
+      <<: *build-sdk
+      target: sdk-standard
+
+  sdk-daemon:
+    build:
+      <<: *build-sdk
+      target: sdk-daemon
 
   frontend:
     build:

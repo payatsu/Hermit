@@ -1,0 +1,52 @@
+ARG USER=developer
+ARG install_dir=/opt/SDK
+ARG baseimage=ubuntu:18.04
+
+FROM ${baseimage} AS sdk-standard
+ARG USER
+ARG install_dir
+
+RUN \
+apt-get update && apt-get upgrade -y && \
+echo Asia/Tokyo > /etc/timezone && \
+DEBIAN_FRONTEND=noninteractive \
+apt-get install -y --no-install-recommends tzdata locales && \
+apt-get install -y --no-install-recommends \
+file \
+gcc \
+python3 \
+wget \
+xz-utils \
+&& \
+apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/* && \
+sed -i -e 's/^# \(en_US\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
+sed -i -e 's/^# \(ja_JP\.UTF-8 UTF-8\)$/\1/' /etc/locale.gen && \
+locale-gen && \
+sed -i -e '/PS1=/s/\\h/\\H/' /root/.bashrc /etc/skel/.bashrc && \
+groupadd ${USER} && \
+useradd -g ${USER} -G dialout -m -s /bin/bash ${USER} && \
+echo root:root | chpasswd && \
+echo ${USER}:${USER} | chpasswd && \
+unset http_proxy https_proxy && \
+installer=sdk.sh && \
+wget --progress=dot:giga -P /tmp http://repository/${installer} && \
+chmod a+x /tmp/${installer} && \
+/tmp/${installer} -y -d ${install_dir} && \
+echo ". ${install_dir}/environment-setup-aarch64-xilinx-linux" >> /etc/profile && \
+rm -fv /tmp/${installer}
+ENV LANG=ja_JP.UTF-8 SHELL=/bin/bash
+COPY scripts/entrypoint.bash /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
+CMD ["bash"]
+
+FROM sdk-standard AS sdk-daemon
+RUN \
+apt-get update && apt-get upgrade -y && \
+apt-get install -y --no-install-recommends openssh-server xauth && \
+mkdir -v /run/sshd && \
+sed -i -e 's/^#\?AddressFamily.\+$/AddressFamily inet/' /etc/ssh/sshd_config && \
+apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/*
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
+
+# vim: set filetype=dockerfile :

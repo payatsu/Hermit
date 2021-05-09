@@ -48,6 +48,16 @@ x-config-petalinux:
     - "etc-petalinux:/etc"
     - "/etc/localtime:/etc/localtime:ro"
 
+x-config-sdk:
+  &config-sdk
+  <<: *common
+  environment: *environment
+  working_dir: "/home/${USER}"
+  volumes:
+    - "./workspace/${PETALINUX_VER}:/home"
+    - "etc-sdk:/etc"
+    - "/etc/localtime:/etc/localtime:ro"
+
 services:
   vivado-standard:
     <<: *config-vivado
@@ -115,6 +125,22 @@ services:
         aliases:
           - petalinux-${PETALINUX_VER}
 
+  sdk-standard:
+    <<: *config-sdk
+    image: sdk:${PETALINUX_VER}-standard
+    hostname: sdk-${PETALINUX_VER}-standard
+    profiles: [non-default]
+
+  sdk-daemon:
+    <<: *config-sdk
+    image: sdk:${PETALINUX_VER}-daemon
+    hostname: sdk-${PETALINUX_VER}-daemon
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - sdk-${PETALINUX_VER}
+
   frontend:
     <<: *common
     environment: *environment
@@ -135,6 +161,7 @@ volumes:
   etc-vivado:
   etc-vitis:
   etc-petalinux:
+  etc-sdk:
   etc-frontend:
   home-frontend:
 
