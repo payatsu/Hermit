@@ -16,6 +16,7 @@ apt-get install -y --no-install-recommends tzdata locales && \
 apt-get install -y --no-install-recommends \
 file \
 gcc \
+git \
 libcurl4 \
 libgtk2.0-0 \
 libswt-gtk-4-java \
@@ -74,13 +75,6 @@ cp -v ~/.Xilinx/install_config.txt.orig ${install_dir} && \
 echo removing /tmp/vitis && rm -fr /tmp/vitis && \
 find ${install_dir} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
 USER root
-RUN \
-find ${install_dir}/Vivado -type f -name git-remote-https | sort | xargs -n 1 -I @ \
-sh -c 'cd `dirname @`/../../bin; \
-echo PATH=\${PATH}:`pwd` >> ${install_dir}/Vivado/${VITIS_VER}/.settings64-Vivado.sh && \
-for f in ../libexec/git-core/git-*; do \
-	ln -sv ${f} `basename ${f}`; \
-done; exit 0'
 
 FROM vitis-standard AS vitis-sacrifice
 ARG install_dir
@@ -93,7 +87,7 @@ COPY --from=vitis-sacrifice ${install_dir} ${install_dir}
 FROM vitis-slim AS vitis-daemon
 RUN \
 apt-get update && apt-get upgrade -y && \
-apt-get install -y --no-install-recommends openssh-server xauth && \
+apt-get install -y --no-install-recommends openssh-server xauth curl && \
 mkdir -v /run/sshd && \
 sed -i -e 's/^#\?AddressFamily.\+$/AddressFamily inet/' /etc/ssh/sshd_config && \
 apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/*

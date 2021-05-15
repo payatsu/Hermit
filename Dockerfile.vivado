@@ -15,6 +15,7 @@ DEBIAN_FRONTEND=noninteractive \
 apt-get install -y --no-install-recommends tzdata locales && \
 apt-get install -y --no-install-recommends \
 fontconfig \
+git \
 libcurl4 \
 libxi6 \
 libxrender1 \
@@ -65,13 +66,6 @@ cp -v ~/.Xilinx/install_config.txt.orig ${install_dir} && \
 echo removing /tmp/vivado && rm -fr /tmp/vivado && \
 find ${install_dir} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
 USER root
-RUN \
-find ${install_dir}/Vivado -type f -name git-remote-https | sort | xargs -n 1 -I @ \
-sh -c 'cd `dirname @`/../../bin; \
-echo PATH=\${PATH}:`pwd` >> ${install_dir}/Vivado/${VIVADO_VER}/.settings64-Vivado.sh && \
-for f in ../libexec/git-core/git-*; do \
-	ln -sv ${f} `basename ${f}`; \
-done; exit 0'
 
 FROM vivado-standard AS vivado-sacrifice
 ARG install_dir
@@ -84,7 +78,7 @@ COPY --from=vivado-sacrifice ${install_dir} ${install_dir}
 FROM vivado-slim AS vivado-daemon
 RUN \
 apt-get update && apt-get upgrade -y && \
-apt-get install -y --no-install-recommends openssh-server xauth && \
+apt-get install -y --no-install-recommends openssh-server xauth curl && \
 mkdir -v /run/sshd && \
 sed -i -e 's/^#\?AddressFamily.\+$/AddressFamily inet/' /etc/ssh/sshd_config && \
 apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/*

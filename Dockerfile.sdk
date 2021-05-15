@@ -42,7 +42,7 @@ CMD ["bash"]
 FROM sdk-standard AS sdk-daemon
 RUN \
 apt-get update && apt-get upgrade -y && \
-apt-get install -y --no-install-recommends openssh-server xauth && \
+apt-get install -y --no-install-recommends openssh-server xauth curl && \
 mkdir -v /run/sshd && \
 sed -i -e 's/^#\?AddressFamily.\+$/AddressFamily inet/' /etc/ssh/sshd_config && \
 apt-get autoremove -y && apt-get autoclean -y && rm -vr /var/lib/apt/lists/*
