@@ -14,6 +14,7 @@ echo Asia/Tokyo > /etc/timezone && \
 DEBIAN_FRONTEND=noninteractive \
 apt-get install -y --no-install-recommends tzdata locales && \
 apt-get install -y --no-install-recommends \
+ccache \
 file \
 gcc \
 git \
