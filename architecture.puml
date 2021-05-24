@@ -1,0 +1,58 @@
+@startuml
+nwdiag {
+    group dockerhost {
+        description = "inside Docker host"
+        color = "#CCFFCC"
+
+        frontend
+        vivado
+        vitis
+        petalinux
+        sdk
+
+        bridge
+
+        NIC
+    }
+
+    group containers {
+        description = "Docker containers"
+        color = "#AAAAFF"
+
+        frontend
+        vivado
+        vitis
+        petalinux
+        sdk
+    }
+
+    network external_network {
+        width = full
+
+        NIC [description = "host NIC"];
+    }
+
+    NIC -- bridge
+
+    network default {
+        width = full
+
+        frontend [address = "frontend"];
+        bridge
+    }
+
+    network backend {
+        width = full
+
+        // 22 -> 10022. hostname:
+        frontend  [address = "frontend",         description = "<u><b>frontend</b></u>\n- sshd", shape = node];
+
+        vivado    [address = "vivado-20xx.x",    description = "<u><b>vivado</b></u>\n- Vivado\n- sshd", shape = node];
+        vitis     [address = "vitis-20xx.x",     description = "<u><b>vitis</b></u>\n- Vitis\n- sshd", shape = node];
+        petalinux [address = "petalinux-20xx.x", description = "<u><b>petalinux</b></u>\n- PetaLinux Tools\n- sshd", shape = node];
+        sdk       [address = "sdk-20xx.x",       description = "<u><b>sdk</b></u>\n- Yocto SDK\n- sshd", shape = node];
+    }
+}
+@enduml
+
+' vim: set expandtab shiftwidth=0 tabstop=4 :
