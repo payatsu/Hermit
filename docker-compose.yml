@@ -77,7 +77,7 @@ services:
     hostname: vivado-${VIVADO_VER}-daemon
     restart: unless-stopped
     networks:
-      default:
+      backend:
         aliases:
           - vivado-${VIVADO_VER}
 
@@ -99,7 +99,7 @@ services:
     hostname: vitis-${VITIS_VER}-daemon
     restart: unless-stopped
     networks:
-      default:
+      backend:
         aliases:
           - vitis-${VITIS_VER}
 
@@ -121,7 +121,7 @@ services:
     hostname: petalinux-${PETALINUX_VER}-daemon
     restart: unless-stopped
     networks:
-      default:
+      backend:
         aliases:
           - petalinux-${PETALINUX_VER}
 
@@ -137,7 +137,7 @@ services:
     hostname: sdk-${PETALINUX_VER}-daemon
     restart: unless-stopped
     networks:
-      default:
+      backend:
         aliases:
           - sdk-${PETALINUX_VER}
 
@@ -154,8 +154,14 @@ services:
       default:
         aliases:
           - frontend
+      backend:
+        aliases:
+          - frontend
     ports:
       - "10022:22"
+
+networks:
+  backend:
 
 volumes:
   etc-vivado:
