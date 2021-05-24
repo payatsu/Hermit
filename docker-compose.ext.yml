@@ -42,6 +42,12 @@ x-build-sdk:
   dockerfile: Dockerfile.sdk
   args: *args
 
+x-build-frontend:
+  &build-frontend
+  <<: *build-common
+  dockerfile: Dockerfile.frontend
+  args: *args
+
 services:
   vivado-standard:
     build:
@@ -100,9 +106,8 @@ services:
 
   frontend:
     build:
-      <<: *build-common
-      dockerfile: Dockerfile.frontend
-      args: *args
+      <<: *build-frontend
+      target: sshd
 
   repository:
     image: nginx:alpine

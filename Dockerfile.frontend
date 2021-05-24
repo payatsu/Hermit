@@ -2,7 +2,7 @@ ARG USER=developer
 ARG install_dir=/opt/Xilinx
 ARG baseimage=ubuntu:18.04
 
-FROM ${baseimage}
+FROM ${baseimage} AS sshd
 ARG USER
 ARG install_dir
 
