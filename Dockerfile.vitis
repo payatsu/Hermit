@@ -1,11 +1,11 @@
 ARG USER=developer
-ARG install_dir=/opt/Xilinx
+ARG install_dir_xilinx=/opt/Xilinx
 ARG VITIS_VER=2020.2
 ARG baseimage=ubuntu:18.04
 
 FROM ${baseimage} AS vitis-yorishiro
 ARG USER
-ARG install_dir
+ARG install_dir_xilinx
 ARG VITIS_VER
 
 RUN \
@@ -41,9 +41,9 @@ groupadd ${USER} && \
 useradd -g ${USER} -m -s /bin/bash ${USER} && \
 echo root:root | chpasswd && \
 echo ${USER}:${USER} | chpasswd && \
-mkdir -pv ${install_dir} && \
-chown -Rv ${USER}:${USER} ${install_dir} && \
-echo "f=\`find ${install_dir}/Vitis -mindepth 2 -maxdepth 2 -type f -name settings64.sh\`; [ -f \"\${f}\" ] && . \${f}; unset f" >> /etc/profile
+mkdir -pv ${install_dir_xilinx} && \
+chown -Rv ${USER}:${USER} ${install_dir_xilinx} && \
+echo "f=\`find ${install_dir_xilinx}/Vitis -mindepth 2 -maxdepth 2 -type f -name settings64.sh\`; [ -f \"\${f}\" ] && . \${f}; unset f" >> /etc/profile
 ENV LANG=ja_JP.UTF-8 SHELL=/bin/bash
 COPY scripts/entrypoint.bash /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/entrypoint.bash"]
@@ -51,7 +51,7 @@ CMD ["bash"]
 
 FROM vitis-yorishiro AS vitis-standard
 ARG USER
-ARG install_dir
+ARG install_dir_xilinx
 ARG VITIS_VER
 
 RUN \
@@ -67,23 +67,23 @@ wget --progress=dot:giga -O- http://repository/Xilinx_Vitis_${VITIS_VER}.tar.gz 
 | tar xzf - -C /tmp/vitis --strip-components 1 && \
 echo 1 | /tmp/vitis/xsetup --batch ConfigGen && \
 cp -v ~/.Xilinx/install_config.txt ~/.Xilinx/install_config.txt.orig && \
-sed -i -e '/^Destination=/s%=.\+$%='${install_dir}'%' ~/.Xilinx/install_config.txt && \
+sed -i -e '/^Destination=/s%=.\+$%='${install_dir_xilinx}'%' ~/.Xilinx/install_config.txt && \
 sed -i -e '/^Modules=/{s/:1/:0/g;s/\(Zynq UltraScale+ MPSoC\):./\1:1/}' ~/.Xilinx/install_config.txt && \
 sed -i -e '/^InstallOptions=/s/\(Enable WebTalk for Vivado to send usage statistics to Xilinx (Always enabled for WebPACK license)\):1/\1:0/' ~/.Xilinx/install_config.txt && \
 /tmp/vitis/xsetup --agree XilinxEULA,3rdPartyEULA,WebTalkTerms --batch Install --config ~/.Xilinx/install_config.txt && \
-cp -v ~/.Xilinx/install_config.txt ${install_dir} && \
-cp -v ~/.Xilinx/install_config.txt.orig ${install_dir} && \
+cp -v ~/.Xilinx/install_config.txt ${install_dir_xilinx} && \
+cp -v ~/.Xilinx/install_config.txt.orig ${install_dir_xilinx} && \
 echo removing /tmp/vitis && rm -fr /tmp/vitis && \
-find ${install_dir} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
+find ${install_dir_xilinx} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
 USER root
 
 FROM vitis-standard AS vitis-sacrifice
-ARG install_dir
+ARG install_dir_xilinx
 
 FROM vitis-yorishiro AS vitis-slim
-ARG install_dir
+ARG install_dir_xilinx
 
-COPY --from=vitis-sacrifice ${install_dir} ${install_dir}
+COPY --from=vitis-sacrifice ${install_dir_xilinx} ${install_dir_xilinx}
 
 FROM vitis-slim AS vitis-daemon
 RUN \
