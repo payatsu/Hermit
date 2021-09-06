@@ -89,7 +89,8 @@ installer=petalinux-v${PETALINUX_VER}-final-installer.run; \
 dflag=`[[ 2019.2 < ${PETALINUX_VER} ]] && echo --dir`; \
 wget --progress=dot:giga -P /tmp http://repository/${installer} && \
 chmod a+x /tmp/${installer} && \
-(cd /tmp; yes | ./${installer} ${dflag} ${install_dir_petalinux}) && \
+ln -sv /bin/true /tmp/less && \
+(cd /tmp; yes | PATH=/tmp:${PATH} ./${installer} ${dflag} ${install_dir_petalinux}) && \
 rm -fv /tmp/${installer} && \
 find ${install_dir_petalinux} -type f -name rlwrap -exec sh -c 'mv -v {} {}.orig; ln -sv /usr/bin/rlwrap {}' \;
 USER root

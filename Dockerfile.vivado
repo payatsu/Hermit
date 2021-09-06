@@ -57,7 +57,14 @@ mkdir -v /tmp/vivado && ( \
 wget --progress=dot:giga -O- http://repository/Xilinx_Unified_${VIVADO_VER}.tar.gz || \
 wget --progress=dot:giga -O- http://repository/Xilinx_Vivado_${VIVADO_VER}.tar.gz ) \
 | tar xzf - -C /tmp/vivado --strip-components 1 && \
-(echo 2; echo 3) | /tmp/vivado/xsetup --batch ConfigGen && \
+select_edition()\
+{ \
+	case ${VIVADO_VER} in \
+	2019.*|2020.*) echo 3; : 3 is Vivado HL System Edition;; \
+	2021.*)        echo 1; : 1 is Vivado ML Standard;; \
+	esac \
+} && \
+(echo 2; select_edition) | /tmp/vivado/xsetup --batch ConfigGen && \
 cp -v ~/.Xilinx/install_config.txt ~/.Xilinx/install_config.txt.orig && \
 sed -i -e '/^Destination=/s%=.\+$%='${install_dir_xilinx}'%' ~/.Xilinx/install_config.txt && \
 sed -i -e '/^Modules=/{s/:1/:0/g;s/\(Zynq UltraScale+ MPSoC\):./\1:1/}' ~/.Xilinx/install_config.txt && \
