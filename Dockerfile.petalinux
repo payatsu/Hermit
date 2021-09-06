@@ -37,6 +37,7 @@ libncurses5-dev \
 libsdl1.2-dev \
 libselinux1 \
 libssl-dev \
+libtinfo5 \
 libtool \
 libtool-bin \
 lsb-release \
