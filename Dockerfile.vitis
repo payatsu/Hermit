@@ -69,7 +69,7 @@ wget --progress=dot:giga -O- http://repository/Xilinx_Vitis_${VITIS_VER}.tar.gz 
 echo 1 | /tmp/vitis/xsetup --batch ConfigGen && \
 cp -v ~/.Xilinx/install_config.txt ~/.Xilinx/install_config.txt.orig && \
 sed -i -e '/^Destination=/s%=.\+$%='${install_dir_xilinx}'%' ~/.Xilinx/install_config.txt && \
-sed -i -e '/^Modules=/{s/:1/:0/g;s/\(Zynq UltraScale+ MPSoC\):./\1:1/}' ~/.Xilinx/install_config.txt && \
+sed -i -e '/^Modules=/{s/:1/:0/g;s/\(Zynq UltraScale+ MPSoC\):./\1:1/;s/\(Versal [^:]\+ Series\):./\1:1/g}' ~/.Xilinx/install_config.txt && \
 sed -i -e '/^InstallOptions=/s/\(Enable WebTalk for Vivado to send usage statistics to Xilinx (Always enabled for WebPACK license)\):1/\1:0/' ~/.Xilinx/install_config.txt && \
 /tmp/vitis/xsetup --agree XilinxEULA,3rdPartyEULA,WebTalkTerms --batch Install --config ~/.Xilinx/install_config.txt && \
 cp -v ~/.Xilinx/install_config.txt ${install_dir_xilinx} && \
