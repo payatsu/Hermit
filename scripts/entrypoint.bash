@@ -38,7 +38,8 @@ chown ${USER}:${USER} /home/${USER} || exit
 
 for u in ${USERS}; do
     grep -qe "^${u}" /etc/passwd && continue
-    useradd -g ${groupname} -m -s /bin/bash ${u} || return
+    groupadd ${u} || return
+    useradd -g ${u} -m -s /bin/bash ${u} || return
     echo ${u}:${u} | chpasswd || return
 done
 
