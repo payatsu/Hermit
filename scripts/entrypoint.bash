@@ -33,14 +33,15 @@ if [ "${USER}" != "${groupname}" ]; then
     groupmod -n ${USER} ${groupname} || exit
 fi
 
+mkdir -p /home/${USER} || exit
 chown ${USER}:${USER} /home/${USER} || exit
 [ -f /home/${USER}/.profile ] || find /etc/skel -type f -exec install -o ${USER} -g ${USER} -m 644 -t /home/${USER} {} + || exit
 
 for u in ${USERS}; do
     grep -qe "^${u}" /etc/passwd && continue
-    groupadd ${u} || return
-    useradd -g ${u} -m -s /bin/bash ${u} || return
-    echo ${u}:${u} | chpasswd || return
+    groupadd ${u} || exit
+    useradd -g ${u} -m -s /bin/bash ${u} || exit
+    echo ${u}:${u} | chpasswd || exit
 done
 
 [ "${1}" = /usr/sbin/sshd ] && exec "$@"
