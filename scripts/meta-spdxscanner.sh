@@ -12,8 +12,9 @@ main()
     # put meta-spdxscanner.
     mkdir -p components/ext_sources || return
     if [ ! -d components/ext_sources/meta-spdxscanner ]; then
-        git clone -b ${codename} https://git.yoctoproject.org/meta-spdxscanner components/ext_sources/meta-spdxscanner || return
+        git clone https://git.yoctoproject.org/meta-spdxscanner components/ext_sources/meta-spdxscanner || return
     fi
+    git -C components/ext_sources/meta-spdxscanner checkout ${codename} || return
 
     if ! grep -e '^CONFIG_USER_LAYER_0=""$' project-spec/configs/config > /dev/null 2>&1;then
         if ! grep -e 'meta-spdxscanner' project-spec/configs/config > /dev/null 2>&1; then
